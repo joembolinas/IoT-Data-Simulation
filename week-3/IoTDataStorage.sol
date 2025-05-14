@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0; // Matched to compiler version
+pragma solidity ^0.8.0;
 
 contract LogisticsDataStorage {
     struct LogisticsRecord {
@@ -13,7 +13,7 @@ contract LogisticsDataStorage {
         string deviceId;            // DeviceID from the CSV
     }
 
-    uint256 public constant MAX_ENTRIES = 100; // Keep a limit for demo purposes
+    uint256 public constant MAX_ENTRIES = 100;
     LogisticsRecord[] public logisticsRecords;
     address public owner;
 

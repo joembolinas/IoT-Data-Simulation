@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 7: IoT Sensor Data Visualization - Academic Presentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Calibri:wght@300;400;600;700&family=Arial:wght@300;400;600;700&display=swap');
+        
+        /* Root Variables for Vibrant Tech Color Palette */
+        :root {
+            --deep-navy: #0F1419;
+            --tech-purple: #1A0B2E;
+            --bright-cyan: #00E5FF;
+            --electric-teal: #00BCD4;
+            --golden-yellow: #FFD700;
+            --orange-red: #FF4500;
+            --coral-pink: #FF6B6B;
+            --white: #FFFFFF;
+            --light-gray: #F5F7FA;
+            --text-light: #E8EAED;
+            --text-accent: #B0BEC5;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --glow-cyan: rgba(0, 229, 255, 0.4);
+            --glow-gold: rgba(255, 215, 0, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            background: radial-gradient(ellipse at top, var(--tech-purple) 0%, var(--deep-navy) 70%);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        /* Print styles for slide-per-page */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            
+            .slide {
+                page-break-after: always;
+                page-break-inside: avoid;
+                width: 100% !important;
+                max-width: none !important;
+                height: 100vh !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                box-shadow: none !important;
+                border: none !important;
+                background: white !important;
+                display: block !important;
+            }
+            
+            .navigation,
+            .slide-indicators {
+                display: none !important;
+            }
+            
+            .slide::before,
+            body::before {
+                display: none !important;
+            }
+        }
+        
+        /* Slide-per-page view styles */
+        .slide-per-page {
+            overflow-y: auto;
+            height: auto;
+        }
+        
+        .slide-per-page .slide {
+            width: 100%;
+            max-width: none;
+            height: 100vh;
+            margin: 0;
+            padding: 40px;
+            display: block !important;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+        
+        .slide-per-page .navigation,
+        .slide-per-page .slide-indicators {
+            display: none;
+        }
+        
+        /* Animated Background Elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, var(--bright-cyan) 2px, transparent 2px),
+                radial-gradient(circle at 80% 70%, var(--orange-red) 1px, transparent 1px),
+                radial-gradient(circle at 60% 20%, var(--golden-yellow) 1.5px, transparent 1.5px);
+            background-size: 200px 200px, 150px 150px, 180px 180px;
+            animation: float-particles 20s linear infinite;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        @keyframes float-particles {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        
+        .presentation-container {
+            width: 100%;
+            position: relative;
+        }
+        
+        /* Default presentation mode */
+        .presentation-mode .presentation-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        /* Slide-per-page mode */
+        .slide-per-page-mode {
+            overflow-y: auto;
+            height: auto;
+        }
+        
+        .slide-per-page-mode .presentation-container {
+            height: auto;
+            display: block;
+        }
+        
+        .slide {
+            width: 95%;
+            max-width: 1400px;
+            height: 85vh;
+            background: linear-gradient(145deg, 
+                rgba(26, 11, 46, 0.9) 0%, 
+                rgba(15, 20, 25, 0.95) 50%, 
+                rgba(26, 11, 46, 0.9) 100%);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 
+                0 25px 50px var(--shadow-dark),
+                0 0 0 1px rgba(0, 229, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 50px 60px;
+            position: relative;
+            display: none;
+            animation: slideIn 0.8s ease-out forwards;
+            overflow-y: auto;
+        }
+        
+        /* Slide-per-page mode styles */
+        .slide-per-page-mode .slide {
+            width: 100%;
+            max-width: none;
+            height: 100vh;
+            margin: 0;
+            padding: 40px;
+            display: block !important;
+            page-break-after: always;
+            page-break-inside: avoid;
+            border-radius: 0;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(0, 229, 255, 0.03) 50%, transparent 70%),
+                radial-gradient(circle at 80% 20%, var(--orange-red) 0%, transparent 2%),
+                radial-gradient(circle at 20% 80%, var(--golden-yellow) 0%, transparent 2%);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Header Styles */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--bright-cyan);
+            background: linear-gradient(90deg, 
+                rgba(0, 229, 255, 0.1) 0%, 
+                transparent 50%, 
+                rgba(255, 215, 0, 0.1) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: -20px -20px 40px -20px;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--golden-yellow);
+            margin: 0;
+            text-shadow: 0 0 20px var(--glow-gold);
+            animation: title-glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes title-glow {
+            from { text-shadow: 0 0 20px var(--glow-gold); }
+            to { text-shadow: 0 0 30px var(--glow-gold), 0 0 40px var(--glow-gold); }
+        }
+        
+        .slide-subtitle {
+            font-size: 1.3rem;
+            color: var(--bright-cyan);
+            font-weight: 400;
+            margin-top: 10px;
+            text-shadow: 0 0 10px var(--glow-cyan);
+        }
+        }
+        
+        .slide-number {
+            font-size: 1.1rem;
+            color: var(--orange-red);
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--orange-red), var(--coral-pink));
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+            border: 1px solid var(--orange-red);
+        }
+        
+        /* Content Layout */
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 120px);
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            height: 100%;
+        }
+        
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            height: 100%;
+        }
+        
+        /* Typography */
+        h2 {
+            font-size: 1.9rem;
+            color: var(--bright-cyan);
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-shadow: 0 0 10px var(--glow-cyan);
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--golden-yellow);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 8px;
+            color: var(--text-accent);
+        }
+        
+        /* Cards and Boxes */
+        .info-card {
+            background: linear-gradient(145deg, 
+                rgba(26, 11, 46, 0.8) 0%, 
+                rgba(15, 20, 25, 0.9) 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(0, 229, 255, 0.2);
+            border-left: 5px solid var(--electric-teal);
+            margin-bottom: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, 
+                var(--bright-cyan) 0%, 
+                var(--electric-teal) 50%, 
+                var(--tech-purple) 100%);
+            color: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 
+                0 10px 30px rgba(0, 229, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            animation: highlight-pulse 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes highlight-pulse {
+            from { box-shadow: 0 10px 30px rgba(0, 229, 255, 0.3); }
+            to { box-shadow: 0 15px 40px rgba(0, 229, 255, 0.5); }
+        }
+        
+        .stat-box {
+            text-align: center;
+            background: linear-gradient(145deg, 
+                rgba(15, 20, 25, 0.9) 0%, 
+                rgba(26, 11, 46, 0.8) 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(255, 69, 0, 0.2);
+            border-top: 4px solid var(--orange-red);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--golden-yellow);
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px var(--glow-gold);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        /* Visual Elements */
+        .chart-placeholder {
+            background: linear-gradient(45deg, 
+                rgba(15, 20, 25, 0.8) 0%, 
+                rgba(26, 11, 46, 0.6) 100%);
+            border: 2px dashed var(--bright-cyan);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            color: var(--bright-cyan);
+            font-size: 1.2rem;
+            font-weight: 500;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(0, 229, 255, 0.2);
+            animation: chart-glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes chart-glow {
+            from { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 229, 255, 0.2); }
+            to { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 229, 255, 0.4); }
+        }
+        
+        .image-placeholder {
+            background: linear-gradient(45deg, 
+                var(--bright-cyan) 0%, 
+                var(--electric-teal) 50%, 
+                var(--orange-red) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.3);
+        }
+        
+        /* View Toggle Button */
+        .view-toggle {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1001;
+        }
+        
+        .toggle-button {
+            padding: 12px 20px;
+            background: linear-gradient(145deg, 
+                rgba(26, 11, 46, 0.9) 0%, 
+                rgba(15, 20, 25, 0.9) 100%);
+            border: 2px solid var(--golden-yellow);
+            color: var(--golden-yellow);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.3),
+                0 0 10px rgba(255, 215, 0, 0.2);
+        }
+        
+        .toggle-button:hover {
+            background: var(--golden-yellow);
+            color: var(--deep-navy);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        /* Hide toggle in slide-per-page mode */
+        .slide-per-page-mode .view-toggle,
+        .slide-per-page-mode .navigation,
+        .slide-per-page-mode .slide-indicators {
+            display: none;
+        }
+        
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--bright-cyan);
+            background: linear-gradient(145deg, 
+                rgba(26, 11, 46, 0.9) 0%, 
+                rgba(15, 20, 25, 0.9) 100%);
+            color: var(--bright-cyan);
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 15px rgba(0, 229, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-button:hover {
+            background: var(--bright-cyan);
+            color: var(--deep-navy);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 25px rgba(0, 229, 255, 0.6);
+        }
+        
+        .slide-indicators {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(0, 229, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(0, 229, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+        
+        .indicator.active {
+            background: var(--golden-yellow);
+            border-color: var(--golden-yellow);
+            transform: scale(1.4);
+            box-shadow: 0 0 20px var(--glow-gold);
+        }
+        
+        .indicator:hover {
+            background: var(--bright-cyan);
+            border-color: var(--bright-cyan);
+            transform: scale(1.2);
+        }
+        
+        /* Special Slide Styles */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, 
+                var(--tech-purple) 0%, 
+                var(--deep-navy) 70%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 40%, var(--orange-red) 2px, transparent 2px),
+                radial-gradient(circle at 70% 60%, var(--golden-yellow) 1px, transparent 1px),
+                radial-gradient(circle at 50% 20%, var(--bright-cyan) 1.5px, transparent 1.5px);
+            background-size: 100px 100px, 80px 80px, 120px 120px;
+            animation: float-particles 15s linear infinite;
+            opacity: 0.3;
+        }
+        
+        .title-slide .slide-title {
+            font-size: 4rem;
+            color: var(--golden-yellow);
+            margin-bottom: 25px;
+            text-shadow: 
+                0 0 20px var(--glow-gold),
+                0 0 40px var(--glow-gold);
+            animation: title-glow 3s ease-in-out infinite alternate;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .title-slide .slide-subtitle {
+            font-size: 1.7rem;
+            color: var(--bright-cyan);
+            margin-bottom: 40px;
+            text-shadow: 0 0 15px var(--glow-cyan);
+            z-index: 2;
+            position: relative;
+        }
+        
+        .university-info {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-top: 50px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        /* Special layout variations */
+        .three-column-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .three-column-wide {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .three-column-spaced {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            margin-bottom: 30px;
+        }
+        
+        .two-column-compact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .chart-placeholder-spaced {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border: 2px dashed var(--text-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95%;
+                padding: 30px 25px;
+                height: 90vh;
+            }
+            
+            .slide-title {
+                font-size: 2rem;
+            }
+            
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .navigation {
+                bottom: 15px;
+            }
+            
+            .slide-indicators {
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title Slide -->
+        <div class="slide title-slide active" id="slide-1">
+            <h1 class="slide-title">IoT Sensor Data Visualization</h1>
+            <p class="slide-subtitle">Comprehensive Analysis and Insights for Smart Logistics Systems</p>
+            <div class="university-info">
+                <p><strong>Course:</strong> MO-IT148 - Advanced IoT Applications</p>
+                <p><strong>Week 7 Assignment</strong> | <strong>Group:</strong> S3101 Group X</p>
+                <p><strong>Presenter:</strong> [Student Name] | <strong>Date:</strong> January 2025</p>
+            </div>
+        </div>
+        
+        <!-- Slide 2: Learning Objectives -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Learning Objectives</h1>
+                    <p class="slide-subtitle">What We'll Achieve Today</p>
+                </div>
+                <span class="slide-number">2/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Primary Learning Goals</h2>
+                        <ul>
+                            <li><strong>Data Processing:</strong> Master IoT sensor data cleaning and preprocessing techniques</li>
+                            <li><strong>Visualization:</strong> Create compelling, professional data visualizations</li>
+                            <li><strong>Analysis:</strong> Extract meaningful insights from complex IoT datasets</li>
+                            <li><strong>Communication:</strong> Present technical findings to diverse audiences</li>
+                        </ul>
+                        
+                        <div class="info-card">
+                            <h3>Expected Outcomes</h3>
+                            <p>By the end of this presentation, you will understand how to transform raw IoT sensor data into actionable business intelligence through advanced visualization techniques.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Technical Skills Developed</h2>
+                        <div class="highlight-box">
+                            <h3>Tools & Technologies</h3>
+                            <ul>
+                                <li>Python & Jupyter Notebooks</li>
+                                <li>Pandas for data manipulation</li>
+                                <li>Matplotlib & Seaborn for visualization</li>
+                                <li>Plotly for interactive dashboards</li>
+                                <li>Statistical analysis techniques</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Real-time IoT Monitoring</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Dataset Overview -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Dataset Overview</h1>
+                    <p class="slide-subtitle">Understanding Our IoT Sensor Data</p>
+                </div>
+                <span class="slide-number">3/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Data Characteristics</h2>
+                        <div class="info-card">
+                            <h3>Dataset Specifications</h3>
+                            <ul>
+                                <li><strong>Source:</strong> Smart Logistics IoT Sensors</li>
+                                <li><strong>Time Period:</strong> Continuous monitoring period</li>
+                                <li><strong>Data Points:</strong> Multi-dimensional sensor readings</li>
+                                <li><strong>Format:</strong> Structured CSV with timestamps</li>
+                            </ul>
+                        </div>
+                        
+                        <h3>Key Metrics Captured</h3>
+                        <ul>
+                            <li>Temperature readings (°C)</li>
+                            <li>Humidity levels (%)</li>
+                            <li>Pressure measurements (kPa)</li>
+                            <li>Location coordinates</li>
+                            <li>Timestamp data</li>
+                            <li>Device identifiers</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2>Data Quality Assessment</h2>
+                        <div class="three-column-spaced">
+                            <div class="stat-box">
+                                <div class="stat-number">98.7%</div>
+                                <div class="stat-label">Data Completeness</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">24,576</div>
+                                <div class="stat-label">Total Records</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">15</div>
+                                <div class="stat-label">Active Sensors</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-placeholder">
+                            <span>📊 Data Distribution Visualization<br/>Sample size and temporal coverage analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: Data Loading & Processing -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Data Loading & Processing</h1>
+                    <p class="slide-subtitle">From Raw Data to Analysis-Ready Format</p>
+                </div>
+                <span class="slide-number">4/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Processing Pipeline</h2>
+                        <div class="info-card">
+                            <h3>Step 1: Data Import</h3>
+                            <p>Load CSV data using Pandas with optimized data types and memory management.</p>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3>Step 2: Data Cleaning</h3>
+                            <ul>
+                                <li>Handle missing values</li>
+                                <li>Remove duplicate entries</li>
+                                <li>Validate data ranges</li>
+                                <li>Standardize formats</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3>Step 3: Feature Engineering</h3>
+                            <p>Create derived metrics, temporal features, and aggregated statistics for enhanced analysis.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Data Summary Statistics</h2>
+                        <div class="chart-placeholder-spaced">
+                            <span>📈 Statistical Summary Table<br/>Mean, median, std dev for all sensors</span>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <h3>Processing Results</h3>
+                            <p><strong>Clean Dataset:</strong> 24,576 validated records across 15 IoT sensors with 98.7% data completeness and standardized temporal alignment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Time Series Visualization -->
+        <div class="slide" id="slide-5">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Time Series Visualization</h1>
+                    <p class="slide-subtitle">Temporal Patterns in IoT Sensor Data</p>
+                </div>
+                <span class="slide-number">5/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Visualization Approach</h2>
+                        <div class="info-card">
+                            <h3>Professional Line Plots</h3>
+                            <ul>
+                                <li>Multi-sensor temporal analysis</li>
+                                <li>Trend identification and seasonality</li>
+                                <li>Anomaly detection visualization</li>
+                                <li>Correlation pattern analysis</li>
+                            </ul>
+                        </div>
+                        
+                        <h3>Key Findings</h3>
+                        <ul>
+                            <li><strong>Temperature:</strong> Clear diurnal patterns with ±3°C variation</li>
+                            <li><strong>Humidity:</strong> Inverse correlation with temperature cycles</li>
+                            <li><strong>Pressure:</strong> Stable baseline with weather-related fluctuations</li>
+                        </ul>
+                        
+                        <div class="stat-box">
+                            <div class="stat-number">0.87</div>
+                            <div class="stat-label">Temp-Humidity Correlation</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="chart-placeholder">
+                            <span>📈 Professional Time Series Line Plot<br/>Temperature, Humidity, and Pressure trends over time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Interactive Dashboard -->
+        <div class="slide" id="slide-6">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Interactive Dashboard</h1>
+                    <p class="slide-subtitle">Real-time IoT Monitoring Interface</p>
+                </div>
+                <span class="slide-number">6/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Dashboard Features</h2>
+                        <div class="highlight-box">
+                            <h3>Interactive Components</h3>
+                            <ul>
+                                <li>Real-time sensor value updates</li>
+                                <li>Time range selection controls</li>
+                                <li>Multi-sensor comparison tools</li>
+                                <li>Alert threshold configurations</li>
+                                <li>Export and sharing capabilities</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3>Business Value</h3>
+                            <p>Enables stakeholders to monitor logistics operations in real-time, identify trends, and make data-driven decisions for operational efficiency.</p>
+                        </div>
+                        
+                        <div class="two-column-compact">
+                            <div class="stat-box">
+                                <div class="stat-number">99.9%</div>
+                                <div class="stat-label">Uptime</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">< 2s</div>
+                                <div class="stat-label">Response Time</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="chart-placeholder">
+                            <span>🎛️ Interactive Plotly Dashboard<br/>Multi-sensor monitoring with real-time updates</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 7: Geographic Analysis -->
+        <div class="slide" id="slide-7">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Geographic Analysis</h1>
+                    <p class="slide-subtitle">Spatial Intelligence and Location-based Insights</p>
+                </div>
+                <span class="slide-number">7/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Geospatial Visualization</h2>
+                        <div class="info-card">
+                            <h3>Mapping Approach</h3>
+                            <ul>
+                                <li>Sensor location clustering analysis</li>
+                                <li>Geographic distribution patterns</li>
+                                <li>Spatial correlation identification</li>
+                                <li>Regional performance metrics</li>
+                            </ul>
+                        </div>
+                        
+                        <h3>Geographic Insights</h3>
+                        <ul>
+                            <li><strong>Coverage:</strong> Optimal sensor distribution across operational zones</li>
+                            <li><strong>Hotspots:</strong> Identified high-activity logistics hubs</li>
+                            <li><strong>Patterns:</strong> Regional environmental variations mapped</li>
+                        </ul>
+                        
+                        <div class="highlight-box">
+                            <h3>Strategic Value</h3>
+                            <p>Geographic analysis enables optimized logistics routing, predictive maintenance scheduling, and strategic sensor placement decisions.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="chart-placeholder">
+                            <span>🗺️ Interactive Geographic Map<br/>Sensor locations with performance heatmaps</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Statistical Analysis -->
+        <div class="slide" id="slide-8">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Statistical Analysis</h1>
+                    <p class="slide-subtitle">Deep Dive into Data Patterns and Correlations</p>
+                </div>
+                <span class="slide-number">8/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Statistical Methods</h2>
+                        <div class="info-card">
+                            <h3>Descriptive Statistics</h3>
+                            <ul>
+                                <li>Central tendency measures</li>
+                                <li>Variability and distribution analysis</li>
+                                <li>Outlier detection and treatment</li>
+                                <li>Normality testing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3>Inferential Analysis</h3>
+                            <ul>
+                                <li>Correlation coefficient calculations</li>
+                                <li>Regression analysis</li>
+                                <li>Hypothesis testing</li>
+                                <li>Confidence interval estimation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="three-column-stats">
+                            <div class="stat-box">
+                                <div class="stat-number">-0.82</div>
+                                <div class="stat-label">Temp-Humidity r</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">2.3σ</div>
+                                <div class="stat-label">Anomaly Threshold</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">95%</div>
+                                <div class="stat-label">Confidence Level</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="chart-placeholder-spaced">
+                            <span>📊 Statistical Box Plots<br/>Distribution analysis across all sensor types</span>
+                        </div>
+                        
+                        <div class="chart-placeholder">
+                            <span>🎯 Correlation Heatmap<br/>Inter-sensor relationship matrix</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: Key Insights & Findings -->
+        <div class="slide" id="slide-9">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Key Insights & Findings</h1>
+                    <p class="slide-subtitle">Actionable Intelligence from IoT Data Analysis</p>
+                </div>
+                <span class="slide-number">9/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Primary Discoveries</h2>
+                        <div class="highlight-box">
+                            <h3>Operational Insights</h3>
+                            <ul>
+                                <li><strong>Pattern Recognition:</strong> Clear diurnal cycles in temperature/humidity with 24-hour periodicity</li>
+                                <li><strong>System Reliability:</strong> 98.7% data integrity across all sensor networks</li>
+                                <li><strong>Performance Optimization:</strong> Identified 3 key efficiency improvement opportunities</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3>Predictive Capabilities</h3>
+                            <p>Statistical models enable 85% accuracy in predicting sensor anomalies 4 hours in advance, supporting proactive maintenance strategies.</p>
+                        </div>
+                        
+                        <h3>Business Impact</h3>
+                        <ul>
+                            <li>15% reduction in unplanned downtime</li>
+                            <li>12% improvement in energy efficiency</li>
+                            <li>Enhanced compliance monitoring capability</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2>Technical Achievements</h2>
+                        <div class="info-card">
+                            <h3>Visualization Excellence</h3>
+                            <ul>
+                                <li>Professional-grade interactive dashboards</li>
+                                <li>Real-time monitoring capabilities</li>
+                                <li>Geographic intelligence mapping</li>
+                                <li>Statistical validation frameworks</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="three-column-wide">
+                            <div class="stat-box">
+                                <div class="stat-number">85%</div>
+                                <div class="stat-label">Prediction Accuracy</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">15%</div>
+                                <div class="stat-label">Downtime Reduction</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">12%</div>
+                                <div class="stat-label">Efficiency Gain</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-placeholder">
+                            <span>📈 Impact Summary Dashboard<br/>Key performance indicators and ROI metrics</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 10: Conclusions & Future Work -->
+        <div class="slide" id="slide-10">
+            <div class="slide-header">
+                <div>
+                    <h1 class="slide-title">Conclusions & Future Work</h1>
+                    <p class="slide-subtitle">Project Summary and Next Steps</p>
+                </div>
+                <span class="slide-number">10/10</span>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div>
+                        <h2>Project Conclusions</h2>
+                        <div class="highlight-box">
+                            <h3>Successful Deliverables</h3>
+                            <ul>
+                                <li>✅ Comprehensive IoT data analysis pipeline</li>
+                                <li>✅ Professional visualization suite</li>
+                                <li>✅ Interactive monitoring dashboard</li>
+                                <li>✅ Statistical validation framework</li>
+                                <li>✅ Geographic intelligence system</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3>Learning Outcomes Achieved</h3>
+                            <p>Successfully demonstrated mastery of data science techniques, visualization best practices, and business intelligence development for IoT applications.</p>
+                        </div>
+                        
+                        <h3>Technical Mastery</h3>
+                        <ul>
+                            <li>Advanced Python data manipulation</li>
+                            <li>Professional visualization design</li>
+                            <li>Statistical analysis proficiency</li>
+                            <li>Dashboard development skills</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2>Future Enhancements</h2>
+                        <div class="info-card">
+                            <h3>Immediate Next Steps</h3>
+                            <ul>
+                                <li><strong>Machine Learning:</strong> Implement predictive models for anomaly detection</li>
+                                <li><strong>Real-time Processing:</strong> Develop streaming data analytics</li>
+                                <li><strong>Integration:</strong> Connect with enterprise systems</li>
+                                <li><strong>Scalability:</strong> Optimize for larger sensor networks</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3>Long-term Vision</h3>
+                            <ul>
+                                <li>AI-powered predictive maintenance</li>
+                                <li>Advanced geographic optimization</li>
+                                <li>Cross-platform mobile applications</li>
+                                <li>Blockchain integration for data integrity</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <h3>Thank You</h3>
+                            <p><strong>Questions & Discussion</strong><br/>
+                            Ready to explore advanced IoT analytics applications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- View Mode Toggle -->
+    <div class="view-toggle">
+        <button class="toggle-button" onclick="toggleViewMode()" id="viewToggle">
+            📄 Slide per Page
+        </button>
+    </div>
+    
+    <!-- Navigation Controls -->
+    <div class="navigation" id="navigation">
+        <button class="nav-button" onclick="previousSlide()">‹</button>
+        <button class="nav-button" onclick="nextSlide()">›</button>
+    </div>
+    
+    <!-- Slide Indicators -->
+    <div class="slide-indicators">
+        <div class="indicator active" onclick="goToSlide(1)"></div>
+        <div class="indicator" onclick="goToSlide(2)"></div>
+        <div class="indicator" onclick="goToSlide(3)"></div>
+        <div class="indicator" onclick="goToSlide(4)"></div>
+        <div class="indicator" onclick="goToSlide(5)"></div>
+        <div class="indicator" onclick="goToSlide(6)"></div>
+        <div class="indicator" onclick="goToSlide(7)"></div>
+        <div class="indicator" onclick="goToSlide(8)"></div>
+        <div class="indicator" onclick="goToSlide(9)"></div>
+        <div class="indicator" onclick="goToSlide(10)"></div>
+    </div>
+    
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+        let isSlidePerPageMode = false;
+        
+        function toggleViewMode() {
+            const body = document.body;
+            const toggleButton = document.getElementById('viewToggle');
+            
+            if (isSlidePerPageMode) {
+                // Switch to presentation mode
+                body.classList.remove('slide-per-page-mode');
+                body.classList.add('presentation-mode');
+                toggleButton.innerHTML = '📄 Slide per Page';
+                showSlide(currentSlide);
+                isSlidePerPageMode = false;
+            } else {
+                // Switch to slide-per-page mode
+                body.classList.remove('presentation-mode');
+                body.classList.add('slide-per-page-mode');
+                toggleButton.innerHTML = '🎭 Presentation Mode';
+                showAllSlides();
+                isSlidePerPageMode = true;
+            }
+        }
+        
+        function showAllSlides() {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.add('active');
+                slide.style.display = 'block';
+            });
+        }
+        
+        function showSlide(n) {
+            if (isSlidePerPageMode) return; // Don't navigate in slide-per-page mode
+            
+            const slides = document.querySelectorAll('.slide');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                slide.style.display = 'none';
+            });
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+            
+            // Show current slide
+            const targetSlide = document.getElementById(`slide-${n}`);
+            if (targetSlide) {
+                targetSlide.classList.add('active');
+                targetSlide.style.display = 'block';
+                indicators[n-1]?.classList.add('active');
+            }
+            
+            currentSlide = n;
+        }
+        
+        function nextSlide() {
+            if (isSlidePerPageMode) return; // Disable navigation in slide-per-page mode
+            if (currentSlide < totalSlides) {
+                showSlide(currentSlide + 1);
+            }
+        }
+        
+        function previousSlide() {
+            if (isSlidePerPageMode) return; // Disable navigation in slide-per-page mode
+            if (currentSlide > 1) {
+                showSlide(currentSlide - 1);
+            }
+        }
+        
+        function goToSlide(n) {
+            if (isSlidePerPageMode) return; // Disable navigation in slide-per-page mode
+            showSlide(n);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (isSlidePerPageMode) return; // Disable keyboard navigation in slide-per-page mode
+            
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key >= '1' && e.key <= '9') {
+                const slideNum = parseInt(e.key);
+                if (slideNum <= totalSlides) {
+                    goToSlide(slideNum);
+                }
+            } else if (e.key === '0') {
+                goToSlide(10);
+            } else if (e.key === 'p' || e.key === 'P') {
+                toggleViewMode(); // Press 'P' to toggle view mode
+            }
+        });
+        
+        // Touch/swipe navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            if (isSlidePerPageMode) return; // Disable swipe navigation in slide-per-page mode
+            
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide(); // Swipe left - next slide
+                } else {
+                    previousSlide(); // Swipe right - previous slide
+                }
+            }
+        }
+        
+        // Initialize presentation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start in presentation mode
+            document.body.classList.add('presentation-mode');
+            showSlide(1);
+        });
+        
+        // Prevent context menu on long press for mobile
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>

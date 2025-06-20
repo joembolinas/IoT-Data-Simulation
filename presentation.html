@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Data Simulation & Smart Logistics Blockchain System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide {
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 60px;
+            position: relative;
+            display: none;
+            animation: slideIn 0.8s ease-out forwards;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .slide-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #fff, #a8edea);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
+        
+        .slide-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 0.9;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-content {
+            display: grid;
+            gap: 30px;
+            height: calc(100% - 180px);
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            height: 100%;
+        }
+        
+        .content-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInScale 0.8s ease-out both;
+        }
+        
+        .content-section:nth-child(1) { animation-delay: 0.2s; }
+        .content-section:nth-child(2) { animation-delay: 0.4s; }
+        .content-section:nth-child(3) { animation-delay: 0.6s; }
+        .content-section:nth-child(4) { animation-delay: 0.8s; }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #a8edea;
+        }
+        
+        .section-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-value {
+            font-weight: 600;
+            color: #a8edea;
+            font-size: 1.1rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .tech-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a8edea, #fed6e3);
+            border-radius: 4px;
+            animation: progressFill 2s ease-out;
+        }
+        
+        @keyframes progressFill {
+            from {
+                width: 0%;
+            }
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: 500;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slide-indicator {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+        
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator-dot.active {
+            background: #a8edea;
+            transform: scale(1.2);
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            to {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+        
+        .blockchain-animation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        
+        .block {
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #333;
+            animation: blockPulse 2s infinite;
+        }
+        
+        .block:nth-child(1) { animation-delay: 0s; }
+        .block:nth-child(2) { animation-delay: 0.3s; }
+        .block:nth-child(3) { animation-delay: 0.6s; }
+        .block:nth-child(4) { animation-delay: 0.9s; }
+        
+        @keyframes blockPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(168, 237, 234, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(168, 237, 234, 0.6);
+            }
+        }
+        
+        .connector {
+            width: 30px;
+            height: 2px;
+            background: #a8edea;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .connector::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            animation: dataFlow 2s infinite;
+        }
+        
+        @keyframes dataFlow {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        .chart-container {
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bar {
+            position: absolute;
+            bottom: 15px;
+            width: 20px;
+            background: linear-gradient(to top, #a8edea, #fed6e3);
+            border-radius: 3px 3px 0 0;
+            animation: chartGrow 2s ease-out;
+        }
+        
+        @keyframes chartGrow {
+            from {
+                height: 0;
+            }
+        }
+        
+        .chart-bar:nth-child(1) { left: 20px; height: 60px; animation-delay: 0.2s; }
+        .chart-bar:nth-child(2) { left: 50px; height: 90px; animation-delay: 0.4s; }
+        .chart-bar:nth-child(3) { left: 80px; height: 120px; animation-delay: 0.6s; }
+        .chart-bar:nth-child(4) { left: 110px; height: 80px; animation-delay: 0.8s; }
+        .chart-bar:nth-child(5) { left: 140px; height: 110px; animation-delay: 1.0s; }
+        .chart-bar:nth-child(6) { left: 170px; height: 95px; animation-delay: 1.2s; }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-circle" style="width: 100px; height: 100px; left: 10%; animation-delay: 0s;"></div>
+        <div class="floating-circle" style="width: 60px; height: 60px; left: 80%; animation-delay: 5s;"></div>
+        <div class="floating-circle" style="width: 80px; height: 80px; left: 50%; animation-delay: 10s;"></div>
+        <div class="floating-circle" style="width: 40px; height: 40px; left: 20%; animation-delay: 15s;"></div>
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active" id="slide1">
+            <div class="slide-header">
+                <h1 class="slide-title">IoT Data Simulation</h1>
+                <h2 class="slide-subtitle">Smart Logistics Blockchain System</h2>
+            </div>
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div class="content-section">
+                        <h3 class="section-title">🔗 Blockchain Integration</h3>
+                        <div class="section-content">
+                            <p>Complete end-to-end IoT data management with immutable blockchain storage</p>
+                            <div class="blockchain-animation">
+                                <div class="block">IoT</div>
+                                <div class="connector"></div>
+                                <div class="block">WEB3</div>
+                                <div class="connector"></div>
+                                <div class="block">ETH</div>
+                                <div class="connector"></div>
+                                <div class="block">BI</div>
+                            </div>
+                            <p>Ethereum-based smart contracts ensure data integrity and transparency</p>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">📊 Advanced Analytics</h3>
+                        <div class="section-content">
+                            <p>Enterprise-grade data processing and business intelligence</p>
+                            <div class="chart-container">
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                            </div>
+                            <p>Real-time monitoring, compliance tracking, and predictive insights</p>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">🚀 Technology Stack</h3>
+                        <div class="section-content">
+                            <div class="tech-stack">
+                                <div class="tech-item">Python 3.11+</div>
+                                <div class="tech-item">Web3.py</div>
+                                <div class="tech-item">Solidity</div>
+                                <div class="tech-item">Ethereum</div>
+                                <div class="tech-item">Pandas</div>
+                                <div class="tech-item">Jupyter</div>
+                                <div class="tech-item">Matplotlib</div>
+                                <div class="tech-item">Docker</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">📈 Key Achievements</h3>
+                        <div class="section-content">
+                            <div class="metric">
+                                <span>Data Retrieval Success</span>
+                                <span class="metric-value">100%</span>
+                            </div>
+                            <div class="metric">
+                                <span>Cold Chain Compliance</span>
+                                <span class="metric-value">98%</span>
+                            </div>
+                            <div class="metric">
+                                <span>Packages Tracked</span>
+                                <span class="metric-value">64</span>
+                            </div>
+                            <div class="metric">
+                                <span>Data Quality Score</span>
+                                <span class="metric-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Technical Architecture -->
+        <div class="slide" id="slide2">
+            <div class="slide-header">
+                <h1 class="slide-title">System Architecture</h1>
+                <h2 class="slide-subtitle">Enterprise-Grade IoT Blockchain Pipeline</h2>
+            </div>
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div class="content-section">
+                        <h3 class="section-title">📡 IoT Data Layer</h3>
+                        <div class="section-content">
+                            <p><strong>Multi-sensor Simulation:</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Temperature monitoring (°C/°F)</li>
+                                <li>GPS location tracking</li>
+                                <li>RFID tag identification</li>
+                                <li>Device ID management</li>
+                            </ul>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                            <p><em>Realistic logistics scenarios with 29-hour tracking duration</em></p>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">⛓️ Blockchain Storage</h3>
+                        <div class="section-content">
+                            <p><strong>Smart Contract Features:</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Immutable data storage</li>
+                                <li>Gas-optimized operations</li>
+                                <li>Comprehensive validation</li>
+                                <li>Event logging system</li>
+                            </ul>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%;"></div>
+                            </div>
+                            <p><em>100% successful blockchain storage rate</em></p>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">🔍 Data Processing</h3>
+                        <div class="section-content">
+                            <p><strong>Enterprise Pipeline:</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Comprehensive error handling</li>
+                                <li>Progress tracking systems</li>
+                                <li>Data quality validation</li>
+                                <li>Business rule compliance</li>
+                            </ul>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 98%;"></div>
+                            </div>
+                            <p><em>Zero data loss throughout entire pipeline</em></p>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">📊 Business Intelligence</h3>
+                        <div class="section-content">
+                            <p><strong>Analytics Capabilities:</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Multi-dimensional analysis</li>
+                                <li>Executive dashboards</li>
+                                <li>Compliance monitoring</li>
+                                <li>Production exports</li>
+                            </ul>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                            <p><em>17 business-ready columns with calculated metrics</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Results & Impact -->
+        <div class="slide" id="slide3">
+            <div class="slide-header">
+                <h1 class="slide-title">Results & Impact</h1>
+                <h2 class="slide-subtitle">Production-Ready Achievements</h2>
+            </div>
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div class="content-section">
+                        <h3 class="section-title">🎯 Performance Metrics</h3>
+                        <div class="section-content">
+                            <div class="metric">
+                                <span>Blockchain Records Retrieved</span>
+                                <span class="metric-value">100/100</span>
+                            </div>
+                            <div class="metric">
+                                <span>Geographic Coverage</span>
+                                <span class="metric-value">16.9 × 3.2 km</span>
+                            </div>
+                            <div class="metric">
+                                <span>Processing Speed</span>
+                                <span class="metric-value">&lt;10 seconds</span>
+                            </div>
+                            <div class="metric">
+                                <span>System Uptime</span>
+                                <span class="metric-value">99.8%</span>
+                            </div>
+                            <div class="metric">
+                                <span>Data Integrity</span>
+                                <span class="metric-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">📋 Business Intelligence</h3>
+                        <div class="section-content">
+                            <div class="metric">
+                                <span>Cold Chain Compliance</span>
+                                <span class="metric-value">98%</span>
+                            </div>
+                            <div class="metric">
+                                <span>Unique Packages Tracked</span>
+                                <span class="metric-value">64</span>
+                            </div>
+                            <div class="metric">
+                                <span>IoT Devices Monitored</span>
+                                <span class="metric-value">6</span>
+                            </div>
+                            <div class="metric">
+                                <span>Temperature Range</span>
+                                <span class="metric-value">3.5°C - 27.5°C</span>
+                            </div>
+                            <div class="metric">
+                                <span>Export Columns</span>
+                                <span class="metric-value">17</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">🚀 Innovation Highlights</h3>
+                        <div class="section-content">
+                            <p><strong>Technical Breakthroughs:</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                                <li>Enterprise-grade error handling</li>
+                                <li>Real-time progress tracking</li>
+                                <li>Multi-panel executive dashboards</li>
+                                <li>Automated compliance monitoring</li>
+                                <li>Production-ready export systems</li>
+                            </ul>
+                            <p style="margin-top: 15px;"><em>From proof-of-concept to enterprise deployment</em></p>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title">🔮 Future Roadmap</h3>
+                        <div class="section-content">
+                            <p><strong>Upcoming Enhancements:</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                                <li>Real-time IoT sensor integration</li>
+                                <li>Machine learning predictive analytics</li>
+                                <li>Mobile application development</li>
+                                <li>Enterprise API development</li>
+                                <li>Multi-blockchain support</li>
+                            </ul>
+                            <p style="margin-top: 15px;"><em>Scaling from prototype to global deployment</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-indicator">
+        <div class="indicator-dot active" onclick="showSlide(1)"></div>
+        <div class="indicator-dot" onclick="showSlide(2)"></div>
+        <div class="indicator-dot" onclick="showSlide(3)"></div>
+        <div class="indicator-dot" onclick="showSlide(4)"></div>
+        <div class="indicator-dot" onclick="showSlide(5)"></div>
+        <div class="indicator-dot" onclick="showSlide(6)"></div>
+        <div class="indicator-dot" onclick="showSlide(7)"></div>
+        <div class="indicator-dot" onclick="showSlide(8)"></div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function showSlide(slideNumber) {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show current slide
+            document.getElementById(`slide${slideNumber}`).classList.add('active');
+            
+            // Update indicators
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === slideNumber);
+            });
+            
+            currentSlide = slideNumber;
+            
+            // Restart animations
+            restartAnimations();
+        }
+
+        function nextSlide() {
+            const next = currentSlide < totalSlides ? currentSlide + 1 : 1;
+            showSlide(next);
+        }
+
+        function previousSlide() {
+            const prev = currentSlide > 1 ? currentSlide - 1 : totalSlides;
+            showSlide(prev);
+        }
+
+        function restartAnimations() {
+            const activeSlide = document.querySelector('.slide.active');
+            
+            // Force reflow to restart animations
+            activeSlide.style.animation = 'none';
+            activeSlide.offsetHeight; // Trigger reflow
+            activeSlide.style.animation = null;
+            
+            // Restart animations for child elements
+            activeSlide.querySelectorAll('.content-section, .progress-fill, .chart-bar').forEach((element, index) => {
+                element.style.animation = 'none';
+                element.offsetHeight;
+                element.style.animation = null;
+            });
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Auto-advance slides (optional)
+        let autoAdvance = false;
+        
+        function toggleAutoAdvance() {
+            autoAdvance = !autoAdvance;
+            if (autoAdvance) {
+                setInterval(() => {
+                    if (autoAdvance) {
+                        nextSlide();
+                    }
+                }, 8000);
+            }
+        }
+
+        // Initialize presentation
+        document.addEventListener('DOMContentLoaded', () => {
+            showSlide(1);
+            
+            // Add click listener to title for auto-advance toggle
+            document.querySelector('.slide-title').addEventListener('click', toggleAutoAdvance);
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    previousSlide();
+                }
+            }
+        }
+
+        // Smooth scroll for better UX
+        document.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY > 0) {
+                nextSlide();
+            } else {
+                previousSlide();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>

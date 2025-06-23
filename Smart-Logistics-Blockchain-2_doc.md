@@ -34,6 +34,98 @@ flowchart LR
 
 Week 6 brought an entirely new set of challenges. While Milestone 1 focused on getting data into the blockchain, Milestone 2 is about extracting maximum value from that data. The goal: create a production-ready system that can retrieve, process, analyze, and present blockchain data in a format suitable for business decision-making.
 
+### Enterprise Architecture Overview
+
+```mermaid
+flowchart TB
+    subgraph "Data Layer"
+        BL[Blockchain Storage]
+        SC[Smart Contracts]
+        WEB3[Web3 Interface]
+    end
+    
+    subgraph "Processing Layer"
+        DR[Data Retrieval Engine]
+        DC[Data Cleaning Pipeline]
+        QA[Quality Assurance]
+    end
+    
+    subgraph "Analytics Layer"
+        SA[Statistical Analysis]
+        TA[Temporal Analysis]
+        GA[Geographic Analysis]
+        BA[Business Analysis]
+    end
+    
+    subgraph "Intelligence Layer"
+        ML[Machine Learning]
+        BI[Business Intelligence]
+        KPI[KPI Calculation]
+        AL[Alert System]
+    end
+    
+    subgraph "Presentation Layer"
+        VIZ[Visualization Engine]
+        DASH[Executive Dashboard]
+        REP[Report Generator]
+        EXP[Export System]
+    end
+    
+    subgraph "User Interface"
+        WEB[Web Interface]
+        API[REST API]
+        MOBILE[Mobile App]
+    end
+    
+    BL --> DR
+    SC --> DR
+    WEB3 --> DR
+    
+    DR --> DC
+    DC --> QA
+    QA --> SA
+    QA --> TA
+    QA --> GA
+    QA --> BA
+    
+    SA --> ML
+    TA --> BI
+    GA --> KPI
+    BA --> AL
+    
+    ML --> VIZ
+    BI --> DASH
+    KPI --> REP
+    AL --> EXP
+    
+    VIZ --> WEB
+    DASH --> API
+    REP --> MOBILE
+    EXP --> WEB
+    
+    style BL fill:#ffcdd2
+    style SC fill:#ffcdd2
+    style WEB3 fill:#ffcdd2
+    style DR fill:#fff3e0
+    style DC fill:#fff3e0
+    style QA fill:#fff3e0
+    style SA fill:#e1f5fe
+    style TA fill:#e1f5fe
+    style GA fill:#e1f5fe
+    style BA fill:#e1f5fe
+    style ML fill:#f3e5f5
+    style BI fill:#f3e5f5
+    style KPI fill:#f3e5f5
+    style AL fill:#f3e5f5
+    style VIZ fill:#e8f5e8
+    style DASH fill:#e8f5e8
+    style REP fill:#e8f5e8
+    style EXP fill:#e8f5e8
+    style WEB fill:#fce4ec
+    style API fill:#fce4ec
+    style MOBILE fill:#fce4ec
+```
+
 The requirements were ambitious:
 - Retrieve ALL 100 IoT records from the blockchain with 100% reliability
 - Implement comprehensive data cleaning and validation
@@ -116,6 +208,40 @@ The result: **100% success rate** with all 100 records retrieved flawlessly.
 
 Moving beyond basic data handling, Milestone 2 demanded enterprise-grade data cleaning. This meant implementing comprehensive validation, type conversion, and quality assurance.
 
+### Data Cleaning Pipeline Architecture
+
+```mermaid
+flowchart TD
+    A[Raw Blockchain Data] --> B{Data Validation}
+    B -->|Valid| C[Type Conversion]
+    B -->|Invalid| D[Error Logging]
+    D --> E[Data Correction]
+    E --> C
+    C --> F[Missing Values Analysis]
+    F --> G{Missing Data Found?}
+    G -->|Yes| H[Imputation Strategy]
+    G -->|No| I[Duplicate Detection]
+    H --> I
+    I --> J{Duplicates Found?}
+    J -->|Yes| K[Remove Duplicates]
+    J -->|No| L[Business Rule Validation]
+    K --> L
+    L --> M{Rule Violations?}
+    M -->|Yes| N[Outlier Analysis]
+    M -->|No| O[Clean Dataset]
+    N --> P[Decision: Keep/Remove]
+    P --> O
+    O --> Q[Quality Metrics Report]
+    
+    style A fill:#ffcdd2
+    style O fill:#c8e6c9
+    style Q fill:#e1f5fe
+    style B fill:#fff3e0
+    style G fill:#fff3e0
+    style J fill:#fff3e0
+    style M fill:#fff3e0
+```
+
 ```python
 # Enterprise Data Cleaning Pipeline
 print("Starting comprehensive data cleaning...")
@@ -185,6 +311,85 @@ The cleaning process achieved:
 ## Chapter 4: Advanced Analytics Engine
 
 Beyond basic statistics, Milestone 2 introduced sophisticated business intelligence analytics. This involved multi-dimensional analysis, trend detection, and actionable business insights.
+
+### Business Intelligence Analytics Framework
+
+```mermaid
+flowchart LR
+    subgraph "Data Sources"
+        DS1[IoT Sensor Data]
+        DS2[Blockchain Records]
+        DS3[GPS Tracking]
+        DS4[Temperature Logs]
+    end
+    
+    subgraph "Analytics Engine"
+        AE1[Statistical Analysis]
+        AE2[Temporal Analysis]
+        AE3[Geographic Analysis]
+        AE4[Device Performance]
+        AE5[Package Tracking]
+        AE6[Compliance Monitoring]
+    end
+    
+    subgraph "Business Intelligence"
+        BI1[Cold Chain Violations]
+        BI2[Route Optimization]
+        BI3[Device Efficiency]
+        BI4[Quality Scores]
+        BI5[Trend Analysis]
+        BI6[Predictive Insights]
+    end
+    
+    subgraph "Outputs"
+        O1[Executive Dashboard]
+        O2[Operational Reports]
+        O3[Compliance Alerts]
+        O4[Performance Metrics]
+    end
+    
+    DS1 --> AE1
+    DS2 --> AE2
+    DS3 --> AE3
+    DS4 --> AE4
+    DS1 --> AE5
+    DS2 --> AE6
+    
+    AE1 --> BI1
+    AE2 --> BI2
+    AE3 --> BI3
+    AE4 --> BI4
+    AE5 --> BI5
+    AE6 --> BI6
+    
+    BI1 --> O1
+    BI2 --> O2
+    BI3 --> O3
+    BI4 --> O4
+    BI5 --> O1
+    BI6 --> O2
+    
+    style DS1 fill:#e3f2fd
+    style DS2 fill:#e3f2fd
+    style DS3 fill:#e3f2fd
+    style DS4 fill:#e3f2fd
+    style AE1 fill:#fff3e0
+    style AE2 fill:#fff3e0
+    style AE3 fill:#fff3e0
+    style AE4 fill:#fff3e0
+    style AE5 fill:#fff3e0
+    style AE6 fill:#fff3e0
+    style BI1 fill:#f3e5f5
+    style BI2 fill:#f3e5f5
+    style BI3 fill:#f3e5f5
+    style BI4 fill:#f3e5f5
+    style BI5 fill:#f3e5f5
+    style BI6 fill:#f3e5f5
+    style O1 fill:#e8f5e8
+    style O2 fill:#e8f5e8
+    style O3 fill:#e8f5e8
+    style O4 fill:#e8f5e8
+```
 
 ```python
 # Advanced Analytics Implementation
@@ -488,7 +693,118 @@ The transformation process:
 
 This ensured the final deliverable met both academic submission standards and corporate presentation requirements.
 
+### System Integration and Data Flow
+
+```mermaid
+flowchart LR
+    subgraph "IoT Ecosystem"
+        TEMP[Temperature Sensors]
+        GPS[GPS Trackers]
+        RFID[RFID Tags]
+        DEVICES[IoT Devices]
+    end
+    
+    subgraph "Blockchain Infrastructure"
+        ETH[Ethereum Network]
+        SC[Smart Contract]
+        WEB3[Web3 Provider]
+    end
+    
+    subgraph "Analytics Platform"
+        PYTHON[Python Engine]
+        PANDAS[Data Processing]
+        NUMPY[Numerical Compute]
+        MATPLOTLIB[Visualization]
+    end
+    
+    subgraph "Business Intelligence"
+        STATS[Statistical Analysis]
+        REPORTS[Business Reports]
+        ALERTS[Compliance Alerts]
+        EXPORT[Data Export]
+    end
+    
+    subgraph "User Interfaces"
+        JUPYTER[Jupyter Notebooks]
+        DASH_UI[Executive Dashboard]
+        CSV[CSV Reports]
+        CHARTS[Interactive Charts]
+    end
+    
+    TEMP --> DEVICES
+    GPS --> DEVICES
+    RFID --> DEVICES
+    DEVICES --> SC
+    
+    SC --> ETH
+    ETH --> WEB3
+    WEB3 --> PYTHON
+    
+    PYTHON --> PANDAS
+    PANDAS --> NUMPY
+    NUMPY --> MATPLOTLIB
+    
+    MATPLOTLIB --> STATS
+    STATS --> REPORTS
+    REPORTS --> ALERTS
+    ALERTS --> EXPORT
+    
+    EXPORT --> JUPYTER
+    JUPYTER --> DASH_UI
+    DASH_UI --> CSV
+    CSV --> CHARTS
+    
+    style TEMP fill:#bbdefb
+    style GPS fill:#bbdefb
+    style RFID fill:#bbdefb
+    style DEVICES fill:#bbdefb
+    style ETH fill:#ffcdd2
+    style SC fill:#ffcdd2
+    style WEB3 fill:#ffcdd2
+    style PYTHON fill:#fff3e0
+    style PANDAS fill:#fff3e0
+    style NUMPY fill:#fff3e0
+    style MATPLOTLIB fill:#fff3e0
+    style STATS fill:#f3e5f5
+    style REPORTS fill:#f3e5f5
+    style ALERTS fill:#f3e5f5
+    style EXPORT fill:#f3e5f5
+    style JUPYTER fill:#e8f5e8
+    style DASH_UI fill:#e8f5e8
+    style CSV fill:#e8f5e8
+    style CHARTS fill:#e8f5e8
+```
+
 ## Milestone 2 Achievements Summary
+
+### Project Timeline and Milestones
+
+```mermaid
+gantt
+    title IoT Blockchain Analytics Development Timeline
+    dateFormat YYYY-MM-DD
+    section Foundation (Week 1-5)
+        IoT Data Simulation     :done, sim, 2024-01-01, 7d
+        Smart Contract Dev      :done, contract, after sim, 7d
+        Blockchain Integration  :done, blockchain, after contract, 7d
+        Web3 Implementation    :done, web3, after blockchain, 7d
+        Testing & Validation   :done, test1, after web3, 7d
+    
+    section Advanced Analytics (Week 6-7)
+        Data Retrieval System  :done, retrieve, 2024-02-05, 3d
+        Data Cleaning Pipeline :done, clean, after retrieve, 2d
+        Analytics Engine       :done, analytics, after clean, 3d
+        Visualization Suite    :done, viz, after analytics, 2d
+        Business Intelligence  :done, bi, after viz, 2d
+        Export System         :done, export, after bi, 1d
+        Documentation         :done, docs, after export, 2d
+    
+    section Future Enhancements
+        Real-time Monitoring  :future, realtime, 2024-02-20, 14d
+        Predictive Analytics  :future, predict, after realtime, 10d
+        Enterprise Integration :future, enterprise, after predict, 7d
+        Mobile Dashboard      :future, mobile, after enterprise, 10d
+```
 
 ### Technical Accomplishments
 - **100% Data Retrieval Success**: All 100 blockchain records processed flawlessly
@@ -515,6 +831,124 @@ This ensured the final deliverable met both academic submission standards and co
 ## Reflection: From Foundation to Production
 
 Milestone 2 represents the evolution from proof-of-concept to production-ready enterprise system. Where Milestone 1 established the foundational blockchain integration, Milestone 2 delivers the advanced analytics and business intelligence capabilities that make the system valuable for real-world deployment.
+
+### Complete System Architecture
+
+```mermaid
+flowchart TD
+    subgraph "Physical Layer"
+        PACKAGES[Logistics Packages]
+        SENSORS[IoT Sensors]
+        ENVIRONMENT[Environmental Conditions]
+    end
+    
+    subgraph "Data Collection"
+        TEMP_SENSOR[Temperature Monitoring]
+        GPS_SENSOR[GPS Tracking]
+        RFID_SENSOR[RFID Identification]
+        TIMESTAMP[Timestamp Generation]
+    end
+    
+    subgraph "Blockchain Layer"
+        CONTRACT[Smart Contract Storage]
+        ETHEREUM[Ethereum Network]
+        IMMUTABLE[Immutable Records]
+        VALIDATION[Data Validation]
+    end
+    
+    subgraph "Analytics Pipeline"
+        RETRIEVAL[Data Retrieval]
+        CLEANING[Data Cleaning]
+        PROCESSING[Data Processing]
+        ANALYSIS[Statistical Analysis]
+    end
+    
+    subgraph "Business Intelligence"
+        COMPLIANCE[Compliance Monitoring]
+        PERFORMANCE[Performance Analysis]
+        OPTIMIZATION[Route Optimization]
+        PREDICTION[Predictive Analytics]
+    end
+    
+    subgraph "Visualization & Reporting"
+        DASHBOARD[Executive Dashboard]
+        CHARTS[Interactive Charts]
+        REPORTS[Business Reports]
+        EXPORTS[Data Exports]
+    end
+    
+    subgraph "Decision Support"
+        ALERTS[Real-time Alerts]
+        RECOMMENDATIONS[AI Recommendations]
+        ACTIONS[Automated Actions]
+        INSIGHTS[Business Insights]
+    end
+    
+    PACKAGES --> SENSORS
+    SENSORS --> ENVIRONMENT
+    ENVIRONMENT --> TEMP_SENSOR
+    ENVIRONMENT --> GPS_SENSOR
+    ENVIRONMENT --> RFID_SENSOR
+    ENVIRONMENT --> TIMESTAMP
+    
+    TEMP_SENSOR --> CONTRACT
+    GPS_SENSOR --> CONTRACT
+    RFID_SENSOR --> CONTRACT
+    TIMESTAMP --> CONTRACT
+    
+    CONTRACT --> ETHEREUM
+    ETHEREUM --> IMMUTABLE
+    IMMUTABLE --> VALIDATION
+    VALIDATION --> RETRIEVAL
+    
+    RETRIEVAL --> CLEANING
+    CLEANING --> PROCESSING
+    PROCESSING --> ANALYSIS
+    ANALYSIS --> COMPLIANCE
+    
+    COMPLIANCE --> PERFORMANCE
+    PERFORMANCE --> OPTIMIZATION
+    OPTIMIZATION --> PREDICTION
+    PREDICTION --> DASHBOARD
+    
+    DASHBOARD --> CHARTS
+    CHARTS --> REPORTS
+    REPORTS --> EXPORTS
+    EXPORTS --> ALERTS
+    
+    ALERTS --> RECOMMENDATIONS
+    RECOMMENDATIONS --> ACTIONS
+    ACTIONS --> INSIGHTS
+    INSIGHTS --> PACKAGES
+    
+    style PACKAGES fill:#ffebee
+    style SENSORS fill:#ffebee
+    style ENVIRONMENT fill:#ffebee
+    style TEMP_SENSOR fill:#e3f2fd
+    style GPS_SENSOR fill:#e3f2fd
+    style RFID_SENSOR fill:#e3f2fd
+    style TIMESTAMP fill:#e3f2fd
+    style CONTRACT fill:#f3e5f5
+    style ETHEREUM fill:#f3e5f5
+    style IMMUTABLE fill:#f3e5f5
+    style VALIDATION fill:#f3e5f5
+    style RETRIEVAL fill:#fff3e0
+    style CLEANING fill:#fff3e0
+    style PROCESSING fill:#fff3e0
+    style ANALYSIS fill:#fff3e0
+    style COMPLIANCE fill:#e1f5fe
+    style PERFORMANCE fill:#e1f5fe
+    style OPTIMIZATION fill:#e1f5fe
+    style PREDICTION fill:#e1f5fe
+    style DASHBOARD fill:#e8f5e8
+    style CHARTS fill:#e8f5e8
+    style REPORTS fill:#e8f5e8
+    style EXPORTS fill:#e8f5e8
+    style ALERTS fill:#fce4ec
+    style RECOMMENDATIONS fill:#fce4ec
+    style ACTIONS fill:#fce4ec
+    style INSIGHTS fill:#fce4ec
+```
 
 The journey demonstrates mastery of:
 - **Full-stack blockchain development** from smart contracts to business intelligence
